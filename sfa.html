@@ -1,0 +1,1061 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Typing Master - 3 Level Challenge</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --primary: #4361ee;
+            --secondary: #3a0ca3;
+            --accent: #f72585;
+            --light: #f8f9fa;
+            --dark: #212529;
+            --success: #4cc9f0;
+            --warning: #f8961e;
+            --danger: #ef233c;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+            color: var(--dark);
+            min-height: 100vh;
+        }
+        
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 20px;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+        
+        .page {
+            display: none;
+            background-color: white;
+            border-radius: 15px;
+            padding: 30px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            position: relative;
+            overflow: hidden;
+            border: 1px solid rgba(0,0,0,0.1);
+        }
+        
+        .page::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 5px;
+            background: linear-gradient(90deg, var(--primary), var(--accent), var(--success));
+        }
+        
+        .page.active {
+            display: block;
+            animation: fadeIn 0.5s ease;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        h1, h2, h3 {
+            color: var(--secondary);
+            margin-bottom: 20px;
+            text-align: center;
+        }
+        
+        h1 {
+            font-size: 2.5rem;
+            background: linear-gradient(90deg, var(--primary), var(--accent));
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            margin-bottom: 10px;
+        }
+        
+        .btn {
+            background-color: var(--primary);
+            color: white;
+            border: none;
+            padding: 12px 25px;
+            border-radius: 50px;
+            cursor: pointer;
+            font-size: 16px;
+            margin-top: 20px;
+            transition: all 0.3s ease;
+            display: block;
+            width: 100%;
+            font-weight: bold;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            position: relative;
+            overflow: hidden;
+            z-index: 1;
+        }
+        
+        .btn::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, rgba(255,255,255,0.1), rgba(255,255,255,0.3));
+            transform: translateX(-100%);
+            transition: transform 0.3s ease;
+            z-index: -1;
+        }
+        
+        .btn:hover {
+            background-color: var(--secondary);
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+        }
+        
+        .btn:hover::after {
+            transform: translateX(0);
+        }
+        
+        .btn:active {
+            transform: translateY(0);
+        }
+        
+        .btn-level {
+            background-color: white;
+            color: var(--primary);
+            border: 2px solid var(--primary);
+            margin: 10px 0;
+        }
+        
+        .btn-level:hover {
+            background-color: var(--primary);
+            color: white;
+        }
+        
+        .btn-easy {
+            border-color: var(--success);
+            color: var(--success);
+        }
+        
+        .btn-easy:hover {
+            background-color: var(--success);
+            color: white;
+        }
+        
+        .btn-medium {
+            border-color: var(--warning);
+            color: var(--warning);
+        }
+        
+        .btn-medium:hover {
+            background-color: var(--warning);
+            color: white;
+        }
+        
+        .btn-hard {
+            border-color: var(--danger);
+            color: var(--danger);
+        }
+        
+        .btn-hard:hover {
+            background-color: var(--danger);
+            color: white;
+        }
+        
+        .typing-area {
+            margin: 20px 0;
+        }
+        
+        .text-display {
+            background-color: var(--light);
+            padding: 25px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+            font-size: 18px;
+            line-height: 1.6;
+            min-height: 150px;
+            border: 1px solid rgba(0,0,0,0.1);
+            box-shadow: inset 0 2px 5px rgba(0,0,0,0.05);
+            position: relative;
+        }
+        
+        .text-display::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 20px;
+            background: linear-gradient(to top, var(--light), rgba(248,249,250,0));
+        }
+        
+        .text-input {
+            width: 100%;
+            height: 120px;
+            padding: 15px;
+            font-size: 16px;
+            border: 2px solid #ddd;
+            border-radius: 10px;
+            resize: none;
+            transition: all 0.3s ease;
+            background-color: var(--light);
+        }
+        
+        .text-input:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(67, 97, 238, 0.2);
+        }
+        
+        .timer {
+            font-size: 2.5rem;
+            text-align: center;
+            margin: 20px 0;
+            color: var(--accent);
+            font-weight: bold;
+            font-family: 'Courier New', monospace;
+            text-shadow: 1px 1px 3px rgba(0,0,0,0.1);
+        }
+        
+        .stats {
+            display: flex;
+            justify-content: space-around;
+            margin: 20px 0;
+            gap: 15px;
+        }
+        
+        .stat-box {
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            color: white;
+            padding: 20px 15px;
+            border-radius: 10px;
+            text-align: center;
+            flex: 1;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            transition: transform 0.3s ease;
+        }
+        
+        .stat-box:hover {
+            transform: translateY(-5px);
+        }
+        
+        .stat-box div:first-child {
+            font-size: 14px;
+            opacity: 0.9;
+            margin-bottom: 5px;
+        }
+        
+        .stat-box div:last-child {
+            font-size: 24px;
+            font-weight: bold;
+        }
+        
+        .result-container {
+            margin-top: 20px;
+        }
+        
+        .result-item {
+            display: flex;
+            justify-content: space-between;
+            padding: 15px;
+            border-bottom: 1px solid #eee;
+            transition: background-color 0.3s ease;
+            border-radius: 5px;
+        }
+        
+        .result-item:hover {
+            background-color: var(--light);
+        }
+        
+        .correct {
+            color: var(--success);
+            font-weight: bold;
+        }
+        
+        .incorrect {
+            color: var(--danger);
+            text-decoration: underline;
+            position: relative;
+        }
+        
+        .incorrect::after {
+            content: '✖';
+            position: absolute;
+            right: -15px;
+            top: -5px;
+            font-size: 10px;
+        }
+        
+        .current {
+            background-color: var(--primary);
+            color: white;
+            padding: 0 3px;
+            border-radius: 3px;
+            animation: pulse 1s infinite;
+        }
+        
+        @keyframes pulse {
+            0% { background-color: var(--primary); }
+            50% { background-color: var(--secondary); }
+            100% { background-color: var(--primary); }
+        }
+        
+        footer {
+            text-align: center;
+            margin-top: 30px;
+            color: #6c757d;
+            font-size: 14px;
+        }
+        
+        .progress-container {
+            width: 100%;
+            height: 10px;
+            background-color: #e9ecef;
+            border-radius: 5px;
+            margin: 20px 0;
+            overflow: hidden;
+        }
+        
+        .progress-bar {
+            height: 100%;
+            background: linear-gradient(90deg, var(--success), var(--primary));
+            width: 0%;
+            transition: width 0.5s ease;
+            border-radius: 5px;
+        }
+        
+        .keyboard-hints {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            margin-top: 20px;
+            flex-wrap: wrap;
+        }
+        
+        .keyboard-hint {
+            background-color: var(--light);
+            padding: 5px 10px;
+            border-radius: 5px;
+            font-size: 12px;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            border: 1px solid rgba(0,0,0,0.1);
+        }
+        
+        .keyboard-hint i {
+            color: var(--primary);
+        }
+        
+        .confetti {
+            position: absolute;
+            width: 10px;
+            height: 10px;
+            background-color: var(--accent);
+            border-radius: 50%;
+            animation: confetti-fall 5s linear forwards;
+        }
+        
+        @keyframes confetti-fall {
+            0% {
+                transform: translateY(-100px) rotate(0deg);
+                opacity: 1;
+            }
+            100% {
+                transform: translateY(100vh) rotate(360deg);
+                opacity: 0;
+            }
+        }
+        
+        .achievement-badge {
+            position: fixed;
+            top: 20px;
+            left: 20px;
+            background: var(--success);
+            color: white;
+            padding: 10px 15px;
+            border-radius: 50px;
+            font-size: 14px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            box-shadow: 0 3px 10px rgba(0,0,0,0.2);
+            transform: translateX(-120%);
+            transition: transform 0.5s ease;
+            z-index: 100;
+        }
+        
+        .achievement-badge.show {
+            transform: translateX(0);
+        }
+        
+        .hand-position {
+            display: flex;
+            justify-content: center;
+            margin: 20px 0;
+            gap: 20px;
+        }
+        
+        .hand {
+            text-align: center;
+        }
+        
+        .hand img {
+            width: 150px;
+            height: auto;
+            margin-bottom: 10px;
+        }
+        
+        .finger-keys {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 5px;
+            justify-content: center;
+            margin-top: 10px;
+        }
+        
+        .finger-key {
+            width: 30px;
+            height: 30px;
+            background-color: var(--light);
+            border-radius: 5px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 12px;
+            font-weight: bold;
+            border: 1px solid rgba(0,0,0,0.1);
+        }
+        
+        .pinkie { background-color: #f8bbd0; }
+        .ring { background-color: #e1bee7; }
+        .middle { background-color: #d1c4e9; }
+        .index { background-color: #c5cae9; }
+        .thumb { background-color: #b3e5fc; }
+        
+        .level-indicator {
+            display: inline-block;
+            padding: 5px 10px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: bold;
+            margin-left: 10px;
+        }
+        
+        .level-easy {
+            background-color: var(--success);
+            color: white;
+        }
+        
+        .level-medium {
+            background-color: var(--warning);
+            color: white;
+        }
+        
+        .level-hard {
+            background-color: var(--danger);
+            color: white;
+        }
+        
+        /* Responsive adjustments */
+        @media (max-width: 768px) {
+            .container {
+                padding: 15px;
+            }
+            
+            .page {
+                padding: 20px;
+            }
+            
+            .stats {
+                flex-direction: column;
+                gap: 10px;
+            }
+            
+            h1 {
+                font-size: 2rem;
+            }
+            
+            .timer {
+                font-size: 2rem;
+            }
+            
+            .hand-position {
+                flex-direction: column;
+                align-items: center;
+            }
+        }
+        
+        /* Fix inline style issues for stat-boxes on results page */
+        #results-page .stat-box {
+            background: none !important;
+        }
+        #results-page .stat-box:nth-child(1) {
+            background: linear-gradient(135deg, var(--success), var(--primary)) !important;
+        }
+        #results-page .stat-box:nth-child(2) {
+            background: linear-gradient(135deg, var(--warning), var(--secondary)) !important;
+        }
+        #results-page .stat-box:nth-child(3) {
+            background: linear-gradient(135deg, var(--accent), var(--danger)) !important;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Welcome Page -->
+        <div id="welcome-page" class="page active">
+            <h1>Typing Master Challenge</h1>
+            <p style="text-align: center; margin-bottom: 30px; font-size: 1.1rem;">
+                Test your typing speed across 3 difficulty levels.
+                <br>Improve your skills with focused practice!
+            </p>
+            
+            <div style="margin-bottom: 30px;">
+                <h3>Select Difficulty Level</h3>
+                <button id="easy-btn" class="btn btn-level btn-easy">
+                    <i class="fas fa-star"></i> Easy (Single Words)
+                </button>
+                <button id="medium-btn" class="btn btn-level btn-medium">
+                    <i class="fas fa-star-half-alt"></i> Medium (Sentences)
+                </button>
+                <button id="hard-btn" class="btn btn-level btn-hard">
+                    <i class="fas fa-star"></i> Hard (Paragraphs)
+                </button>
+            </div>
+            
+            <div class="keyboard-hints">
+                <div class="keyboard-hint">
+                    <i class="fas fa-lightbulb"></i> Focus on accuracy first
+                </div>
+                <div class="keyboard-hint">
+                    <i class="fas fa-lightbulb"></i> Use all fingers
+                </div>
+                <div class="keyboard-hint">
+                    <i class="fas fa-lightbulb"></i> Don't look at the keyboard
+                </div>
+            </div>
+        </div>
+        
+        <!-- Hand Position Page -->
+        <div id="hand-position-page" class="page">
+            <h2>Proper Hand Position <span id="level-badge" class="level-indicator level-easy">Easy</span></h2>
+            <p style="text-align: center; margin-bottom: 20px;">
+                Place your fingers on the home row keys as shown below:
+            </p>
+            
+            <div class="hand-position">
+                <div class="hand">
+                    <div style="font-weight: bold; margin-bottom: 10px;">Left Hand</div>
+                    <svg width="150" height="150" viewBox="0 0 200 200">
+                        <path d="M100,50 Q150,100 100,150 Q50,100 100,50 Z" fill="#f8bbd0" stroke="#333" stroke-width="2"/>
+                        <path d="M100,50 Q150,60 150,100 Q150,140 100,150" fill="#e1bee7" stroke="#333" stroke-width="2"/>
+                        <path d="M100,50 Q130,50 150,70 Q170,100 150,130 Q130,150 100,150" fill="#d1c4e9" stroke="#333" stroke-width="2"/>
+                        <path d="M100,50 Q110,40 130,50 Q150,70 150,100 Q150,130 130,150 Q110,160 100,150" fill="#c5cae9" stroke="#333" stroke-width="2"/>
+                        <path d="M50,100 Q70,70 100,50 Q120,30 150,40 Q170,60 170,100 Q170,140 150,160 Q120,170 100,150 Q70,130 50,100 Z" fill="#b3e5fc" stroke="#333" stroke-width="2"/>
+                        <text x="100" y="30" text-anchor="middle" font-size="14" font-weight="bold">Left Hand</text>
+                        <text x="70" y="100" text-anchor="middle" font-size="12">A</text>
+                        <text x="90" y="100" text-anchor="middle" font-size="12">S</text>
+                        <text x="110" y="100" text-anchor="middle" font-size="12">D</text>
+                        <text x="130" y="100" text-anchor="middle" font-size="12">F</text>
+                        <text x="50" y="100" text-anchor="middle" font-size="12">Pinky</text>
+                    </svg>
+                    <div class="finger-keys">
+                        <div class="finger-key pinkie">A</div>
+                        <div class="finger-key ring">S</div>
+                        <div class="finger-key middle">D</div>
+                        <div class="finger-key index">F</div>
+                        <div class="finger-key thumb">Space</div>
+                    </div>
+                </div>
+                
+                <div class="hand">
+                    <div style="font-weight: bold; margin-bottom: 10px;">Right Hand</div>
+                    <svg width="150" height="150" viewBox="0 0 200 200">
+                        <path d="M100,50 Q50,100 100,150 Q150,100 100,50 Z" fill="#f8bbd0" stroke="#333" stroke-width="2"/>
+                        <path d="M100,50 Q50,60 50,100 Q50,140 100,150" fill="#e1bee7" stroke="#333" stroke-width="2"/>
+                        <path d="M100,50 Q70,50 50,70 Q30,100 50,130 Q70,150 100,150" fill="#d1c4e9" stroke="#333" stroke-width="2"/>
+                        <path d="M100,50 Q90,40 70,50 Q50,70 50,100 Q50,130 70,150 Q90,160 100,150" fill="#c5cae9" stroke="#333" stroke-width="2"/>
+                        <path d="M150,100 Q130,70 100,50 Q80,30 50,40 Q30,60 30,100 Q30,140 50,160 Q80,170 100,150 Q130,130 150,100 Z" fill="#b3e5fc" stroke="#333" stroke-width="2"/>
+                        <text x="100" y="30" text-anchor="middle" font-size="14" font-weight="bold">Right Hand</text>
+                        <text x="130" y="100" text-anchor="middle" font-size="12">;</text>
+                        <text x="110" y="100" text-anchor="middle" font-size="12">L</text>
+                        <text x="90" y="100" text-anchor="middle" font-size="12">K</text>
+                        <text x="70" y="100" text-anchor="middle" font-size="12">J</text>
+                        <text x="150" y="100" text-anchor="middle" font-size="12">Pinky</text>
+                    </svg>
+                    <div class="finger-keys">
+                        <div class="finger-key pinkie">;</div>
+                        <div class="finger-key ring">L</div>
+                        <div class="finger-key middle">K</div>
+                        <div class="finger-key index">J</div>
+                        <div class="finger-key thumb">Space</div>
+                    </div>
+                </div>
+            </div>
+            
+            <p style="text-align: center; margin: 20px 0; font-style: italic;">
+                Keep your fingers curved and return to these positions after each keystroke.
+            </p>
+            
+            <button id="start-test-btn" class="btn">
+                <i class="fas fa-keyboard"></i> Start Typing Test
+            </button>
+        </div>
+        
+        <!-- Typing Test Page -->
+        <div id="typing-page" class="page">
+            <h2>Typing Test <span id="current-level-badge" class="level-indicator level-easy">Easy</span></h2>
+            
+            <div class="progress-container">
+                <div class="progress-bar" id="progress-bar"></div>
+            </div>
+            
+            <div class="timer" id="timer">01:00</div>
+            
+            <div class="typing-area">
+                <div class="text-display" id="text-display"></div>
+                <textarea class="text-input" id="text-input" placeholder="Start typing here..." autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"></textarea>
+            </div>
+            
+            <div class="stats">
+                <div class="stat-box">
+                    <div>Words Per Minute</div>
+                    <div id="wpm-stat">0</div>
+                </div>
+                <div class="stat-box">
+                    <div>Accuracy</div>
+                    <div id="accuracy-stat">0%</div>
+                </div>
+                <div class="stat-box">
+                    <div>Characters</div>
+                    <div id="chars-stat">0</div>
+                </div>
+                <div class="stat-box">
+                    <div>Time Left</div>
+                    <div id="time-left">60s</div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Results Page -->
+        <div id="results-page" class="page">
+            <h2>Your Typing Results <span id="result-level-badge" class="level-indicator level-easy">Easy</span></h2>
+            
+            <div style="text-align: center; margin-bottom: 20px;">
+                <div style="font-size: 24px; color: var(--primary); font-weight: bold; margin-bottom: 10px;">
+                    Your Score: <span id="wpm-result">0</span> WPM
+                </div>
+                <div id="wpm-rating" style="font-size: 18px; color: var(--accent); margin-bottom: 20px;"></div>
+            </div>
+            
+            <div class="stats" style="margin-bottom: 20px;">
+                <div class="stat-box" style="background: linear-gradient(135deg, var(--success), var(--primary));">
+                    <div>Accuracy</div>
+                    <div id="accuracy-result">0%</div>
+                </div>
+                <div class="stat-box" style="background: linear-gradient(135deg, var(--warning), var(--secondary));">
+                    <div>Correct Chars</div>
+                    <div id="correct-chars">0</div>
+                </div>
+                <div class="stat-box" style="background: linear-gradient(135deg, var(--accent), var(--danger));">
+                    <div>Total Chars</div>
+                    <div id="total-chars">0</div>
+                </div>
+            </div>
+            
+            <div id="improvement-tips" style="margin-top: 20px; padding: 15px; background-color: var(--light); border-radius: 8px;">
+                <h3 style="margin-bottom: 10px; color: var(--secondary);">Improvement Tips</h3>
+                <div id="tips-content"></div>
+            </div>
+            
+            <button id="restart-btn" class="btn">
+                <i class="fas fa-redo"></i> Try Again
+            </button>
+            
+            <button id="new-test-btn" class="btn" style="background-color: var(--success); margin-top: 10px;">
+                <i class="fas fa-keyboard"></i> New Test
+            </button>
+        </div>
+    </div>
+    
+    <div class="achievement-badge" id="achievement-badge">
+        <i class="fas fa-trophy"></i>
+        <span id="achievement-text">New High Score!</span>
+    </div>
+    
+    <footer>
+        <p>Typing Master Challenge &copy; <span id="current-year"></span> | Practice daily to improve!</p>
+    </footer>
+
+    <script>
+        // Application state
+        const state = {
+            currentPage: 'welcome',
+            currentLevel: 'easy',
+            timer: 60,
+            timerInterval: null,
+            testActive: false,
+            words: [
+                'apple', 'brave', 'crisp', 'dwarf', 'eagle', 'flame', 'globe', 'happy', 'igloo', 'jolly',
+                'karma', 'lucky', 'magic', 'noble', 'olive', 'peach', 'quick', 'royal', 'sunny', 'tiger',
+                'urban', 'vivid', 'witty', 'xerox', 'yacht', 'zebra', 'actor', 'badge', 'cabin', 'dance',
+                'earth', 'fable', 'giant', 'haste', 'ideal', 'joust', 'koala', 'lunar', 'mango', 'nymph',
+                'oasis', 'piano', 'quilt', 'rider', 'salsa', 'tulip', 'umbra', 'vocal', 'waltz', 'xenon'
+            ],
+            sentences: [
+                'The quick brown fox jumps over the lazy dog.',
+                'Pack my box with five dozen liquor jugs.',
+                'How vexingly quick daft zebras jump!',
+                'Bright vixens jump; dozy fowl quack.',
+                'Sphinx of black quartz, judge my vow.',
+                'Crazy Fredrick bought many very exquisite opal jewels.',
+                'We promptly judged antique ivory buckles for the next prize.',
+                'Jaded zombies acted quaintly but kept driving their oxen forward.',
+                'The five boxing wizards jump quickly.',
+                'Few black taxis drive up major roads on quiet hazy nights.'
+            ],
+            paragraphs: [
+                'Effective communication skills are essential in today\'s professional environment. Writing clear and concise emails can significantly impact your career progression. The ability to type quickly and accurately saves valuable time and increases productivity. Practice consistently to see measurable improvements in your typing speed and accuracy over time.',
+                'The history of typing dates back to the 19th century with the invention of the typewriter. Christopher Latham Sholes invented the QWERTY keyboard layout in 1878, which was designed to prevent mechanical typewriter jams. Despite technological advancements, this layout remains standard on most keyboards today. Learning proper typing technique can help you avoid repetitive strain injuries.',
+                'Programming requires precise typing skills as even a single misplaced character can cause errors. Developers often need to type complex syntax quickly and accurately. Many programmers use keyboard shortcuts to improve their workflow efficiency. Regular typing practice can significantly boost your coding productivity and reduce frustration.',
+                'Touch typing is the ability to type without looking at the keyboard. This skill was first developed by typing instructors in the late 1800s. Proper touch typing technique involves keeping your fingers on the home row keys and using all fingers. With consistent practice, touch typing can become second nature and dramatically increase your speed.',
+                'Ergonomics plays a crucial role in comfortable and efficient typing. Your keyboard should be positioned so your elbows are at a 90-degree angle. Keep your wrists straight and slightly elevated above the keyboard. Taking regular breaks can help prevent fatigue and repetitive strain injuries during long typing sessions.'
+            ],
+            result: {
+                wpm: 0,
+                accuracy: 0,
+                correctChars: 0,
+                totalChars: 0
+            },
+            highScores: {
+                easy: localStorage.getItem('typingHighScoreEasy') || 0,
+                medium: localStorage.getItem('typingHighScoreMedium') || 0,
+                hard: localStorage.getItem('typingHighScoreHard') || 0
+            }
+        };
+
+        // DOM elements
+        const welcomePage = document.getElementById('welcome-page');
+        const handPositionPage = document.getElementById('hand-position-page');
+        const typingPage = document.getElementById('typing-page');
+        const resultsPage = document.getElementById('results-page');
+        const easyBtn = document.getElementById('easy-btn');
+        const mediumBtn = document.getElementById('medium-btn');
+        const hardBtn = document.getElementById('hard-btn');
+        const startTestBtn = document.getElementById('start-test-btn');
+        const timerElement = document.getElementById('timer');
+        const textDisplay = document.getElementById('text-display');
+        const textInput = document.getElementById('text-input');
+        const wpmStat = document.getElementById('wpm-stat');
+        const accuracyStat = document.getElementById('accuracy-stat');
+        const charsStat = document.getElementById('chars-stat');
+        const timeLeftStat = document.getElementById('time-left');
+        const progressBar = document.getElementById('progress-bar');
+        const restartBtn = document.getElementById('restart-btn');
+        const newTestBtn = document.getElementById('new-test-btn');
+        const wpmResult = document.getElementById('wpm-result');
+        const accuracyResult = document.getElementById('accuracy-result');
+        const correctChars = document.getElementById('correct-chars');
+        const totalChars = document.getElementById('total-chars');
+        const wpmRating = document.getElementById('wpm-rating');
+        const tipsContent = document.getElementById('tips-content');
+        const achievementBadge = document.getElementById('achievement-badge');
+        const achievementText = document.getElementById('achievement-text');
+        const currentYear = document.getElementById('current-year');
+        const levelBadge = document.getElementById('level-badge');
+        const currentLevelBadge = document.getElementById('current-level-badge');
+        const resultLevelBadge = document.getElementById('result-level-badge');
+
+        // Event listeners
+        easyBtn.addEventListener('click', () => startLevel('easy'));
+        mediumBtn.addEventListener('click', () => startLevel('medium'));
+        hardBtn.addEventListener('click', () => startLevel('hard'));
+        startTestBtn.addEventListener('click', startTypingTest);
+        textInput.addEventListener('input', checkTyping);
+        restartBtn.addEventListener('click', restartTest);
+        newTestBtn.addEventListener('click', newTest);
+
+        // Initialize
+        currentYear.textContent = new Date().getFullYear();
+        showPage('welcome');
+
+        // Show a specific page
+        function showPage(pageName) {
+            welcomePage.classList.remove('active');
+            handPositionPage.classList.remove('active');
+            typingPage.classList.remove('active');
+            resultsPage.classList.remove('active');
+            
+            state.currentPage = pageName;
+            
+            switch(pageName) {
+                case 'welcome':
+                    welcomePage.classList.add('active');
+                    break;
+                case 'hand-position':
+                    handPositionPage.classList.add('active');
+                    break;
+                case 'typing':
+                    typingPage.classList.add('active');
+                    break;
+                case 'results':
+                    resultsPage.classList.add('active');
+                    break;
+            }
+        }
+
+        // Start a level
+        function startLevel(level) {
+            state.currentLevel = level;
+            state.timer = 60;
+            
+            // Update level badge
+            levelBadge.textContent = level.charAt(0).toUpperCase() + level.slice(1);
+            levelBadge.className = 'level-indicator level-' + level;
+            
+            showPage('hand-position');
+        }
+
+        // Start the typing test
+        function startTypingTest() {
+            state.testActive = true;
+            state.timer = 60;
+            state.result = {
+                wpm: 0,
+                accuracy: 0,
+                correctChars: 0,
+                totalChars: 0
+            };
+            
+            // Update level badge
+            currentLevelBadge.textContent = state.currentLevel.charAt(0).toUpperCase() + state.currentLevel.slice(1);
+            currentLevelBadge.className = 'level-indicator level-' + state.currentLevel;
+            
+            // Generate test content based on level
+            let testContent = '';
+            if (state.currentLevel === 'easy') {
+                // Select 15 random words
+                const shuffled = [...state.words].sort(() => 0.5 - Math.random());
+                testContent = shuffled.slice(0, 15).join(' ');
+            } else if (state.currentLevel === 'medium') {
+                // Select 1 random sentence
+                testContent = state.sentences[Math.floor(Math.random() * state.sentences.length)];
+            } else {
+                // Select 1 random paragraph
+                testContent = state.paragraphs[Math.floor(Math.random() * state.paragraphs.length)];
+            }
+            
+            // Display the content
+            textDisplay.innerHTML = '';
+            testContent.split('').forEach((char, index) => {
+                const span = document.createElement('span');
+                span.id = 'char-' + index;
+                span.textContent = char;
+                textDisplay.appendChild(span);
+            });
+            
+            // Reset UI
+            textInput.value = '';
+            textInput.disabled = false;
+            progressBar.style.width = '0%';
+            wpmStat.textContent = '0';
+            accuracyStat.textContent = '0%';
+            charsStat.textContent = '0';
+            timeLeftStat.textContent = '60s';
+            updateTimerDisplay();
+            clearInterval(state.timerInterval);
+            state.timerInterval = null;
+            
+            // Focus the input
+            setTimeout(() => {
+                textInput.focus();
+            }, 100);
+            
+            showPage('typing');
+        }
+
+        // Update timer display
+        function updateTimerDisplay() {
+            const minutes = Math.floor(state.timer / 60);
+            const seconds = state.timer % 60;
+            timerElement.textContent = `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+            timeLeftStat.textContent = `${state.timer}s`;
+        }
+
+        // Start the timer
+        function startTimer() {
+            if (state.timerInterval) return;
+            
+            state.timerInterval = setInterval(() => {
+                state.timer--;
+                updateTimerDisplay();
+                
+                if (state.timer <= 0) {
+                    clearInterval(state.timerInterval);
+                    endTest();
+                }
+            }, 1000);
+        }
+
+        // Check typing progress
+        function checkTyping() {
+            // Start timer on first keystroke
+            if (!state.timerInterval && textInput.value.length > 0) {
+                startTimer();
+            }
+            
+            const originalText = textDisplay.textContent;
+            const inputText = textInput.value;
+            
+            let correctChars = 0;
+            const totalChars = inputText.length;
+            
+            // Update progress bar
+            const progress = (inputText.length / originalText.length) * 100;
+            progressBar.style.width = `${Math.min(progress, 100)}%`;
+            
+            // Reset all character styling first
+            for (let i = 0; i < originalText.length; i++) {
+                const charSpan = document.getElementById('char-' + i);
+                if (charSpan) {
+                    charSpan.className = '';
+                    
+                    // Highlight current position
+                    if (i === inputText.length && i < originalText.length) {
+                        charSpan.classList.add('current');
+                    }
+                }
+            }
+            
+            // Check each character
+            for (let i = 0; i < Math.min(inputText.length, originalText.length); i++) {
+                const charSpan = document.getElementById('char-' + i);
+                if (charSpan) {
+                    if (inputText[i] === originalText[i]) {
+                        charSpan.classList.add('correct');
+                        correctChars++;
+                    } else {
+                        charSpan.classList.add('incorrect');
+                    }
+                }
+            }
+
+            // Update stats
+            charsStat.textContent = totalChars;
+            state.result.correctChars = correctChars;
+            state.result.totalChars = totalChars;
+            
+            // Calculate WPM and accuracy
+            const wordsTyped = inputText.trim().split(/\s+/).length;
+            const minutes = (60 - state.timer) / 60;
+            const wpm = minutes > 0 ? Math.round(wordsTyped / minutes) : 0;
+            const accuracy = totalChars > 0 ? Math.round((correctChars / totalChars) * 100) : 0;
+            wpmStat.textContent = wpm;
+            accuracyStat.textContent = accuracy + '%';
+
+            // End test if completed
+            if (inputText.length >= originalText.length) {
+                endTest();
+            }
+        }
+
+        // End the typing test
+        function endTest() {
+            state.testActive = false;
+            textInput.disabled = true;
+            clearInterval(state.timerInterval);
+            state.timerInterval = null;
+
+            // Calculate final stats
+            const originalText = textDisplay.textContent;
+            const inputText = textInput.value;
+            let correctChars = 0;
+            for (let i = 0; i < Math.min(inputText.length, originalText.length); i++) {
+                if (inputText[i] === originalText[i]) correctChars++;
+            }
+            const totalChars = inputText.length;
+            const wordsTyped = inputText.trim().split(/\s+/).length;
+            const minutes = (60 - state.timer) / 60;
+            const wpm = minutes > 0 ? Math.round(wordsTyped / minutes) : 0;
+            const accuracy = totalChars > 0 ? Math.round((correctChars / totalChars) * 100) : 0;
+
+            // Update result state
+            state.result = {
+                wpm,
+                accuracy,
+                correctChars,
+                totalChars
+            };
+
+            // Show results
+            showResults();
+        }
+
+        // Show results page
+        function showResults() {
+            wpmResult.textContent = state.result.wpm;
+            accuracyResult.textContent = state.result.accuracy + '%';
+            correctChars.textContent = state.result.correctChars;
+            totalChars.textContent = state.result.totalChars;
+            resultLevelBadge.textContent = state.currentLevel.charAt(0).toUpperCase() + state.currentLevel.slice(1);
+            resultLevelBadge.className = 'level-indicator level-' + state.currentLevel;
+
+            // WPM rating
+            let rating = '';
+            if (state.result.wpm >= 60) rating = 'Excellent! 🚀';
+            else if (state.result.wpm >= 40) rating = 'Great job! 👍';
+            else if (state.result.wpm >= 25) rating = 'Good effort! 😊';
+            else rating = 'Keep practicing! 💪';
+            wpmRating.textContent = rating;
+
+            // Tips
+            let tips = '';
+            if (state.result.accuracy < 80) tips += '<li>Focus on accuracy before speed.</li>';
+            if (state.result.wpm < 30) tips += '<li>Practice regularly to increase your speed.</li>';
+            tips += '<li>Use all your fingers and proper hand position.</li>';
+            tips += '<li>Don\'t look at the keyboard while typing.</li>';
+            tipsContent.innerHTML = `<ul>${tips}</ul>`;
+
+            // High score logic
+            let highScoreKey = '';
+            if (state.currentLevel === 'easy') highScoreKey = 'typingHighScoreEasy';
+            else if (state.currentLevel === 'medium') highScoreKey = 'typingHighScoreMedium';
+            else highScoreKey = 'typingHighScoreHard';
+            let prevHigh = parseInt(localStorage.getItem(highScoreKey) || '0', 10);
+            if (state.result.wpm > prevHigh) {
+                localStorage.setItem(highScoreKey, state.result.wpm);
+                achievementText.textContent = 'New High Score!';
+                achievementBadge.classList.add('show');
+                setTimeout(() => achievementBadge.classList.remove('show'), 3000);
+            }
+
+            showPage('results');
+        }
+
+        // Restart the same test
+        function restartTest() {
+            startTypingTest();
+        }
+
+        // Start a new test (go back to level select)
+        function newTest() {
+            showPage('welcome');
+        }
+
+    </script>
+</body>
+</html>
